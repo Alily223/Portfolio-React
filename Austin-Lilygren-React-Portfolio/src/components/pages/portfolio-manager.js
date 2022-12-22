@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash, faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
+import { faTrash, faSignOutAlt} from "@fortawesome/free-solid-svg-icons";
 
 import PortfolioSidebarList from "../portfolio/portfolio-sidebar-list";
 import PorfolioForm from "../portfolio/portfolio-form";
@@ -15,12 +15,26 @@ export default class PortfolioManager extends Component {
 
     this.state = {
       portfolioItems: [],
+      portfolioToEdit: {}
     };
 
-    this.handleSuccesfulFormSubmission =
-      this.handleSuccesfulFormSubmission.bind(this);
+    this.handleSuccesfulFormSubmission = this.handleSuccesfulFormSubmission.bind(this);
     this.handleFormSubmissionError = this.handleFormSubmissionError.bind(this);
     this.handleDeleteClick = this.handleDeleteClick.bind(this);
+    this.handleEditClick = this.handleEditClick.bind(this);
+    this.clearPortfolioToEdit= this.clearPortfolioToEdit.bind(this);
+  }
+
+  clearPortfolioToEdit() {
+    this.setState({
+      portfolioToEdit: {}
+    })
+  }
+
+  handleEditClick(portfolioItem) {
+    this.setState({
+      portfolioToEdit: portfolioItem
+    })
   }
 
   handleDeleteClick(portfolioItem) {
@@ -76,11 +90,14 @@ export default class PortfolioManager extends Component {
           <PorfolioForm
             handleSuccesfulFormSubmission={this.handleSuccesfulFormSubmission}
             handleFormSubmissionError={this.handleFormSubmissionError}
+            clearPortfolioToEdit={this.clearPortfolioToEdit}
+            portfolioToEdit={this.state.portfolioToEdit}
           />
         </div>
 
         <div className="right-column">
           <PortfolioSidebarList
+            handleEditClick={this.handleEditClick}
             handleDeleteClick={this.handleDeleteClick}
             data={this.state.portfolioItems}
           />
