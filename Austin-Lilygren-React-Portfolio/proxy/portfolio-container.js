@@ -76,8 +76,8 @@ export default class PortfolioContainer extends Component {
             {this.portfolioItems()}
         </div>
       </div>
+        
       
-  
     );
   }
 }
