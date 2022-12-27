@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import BlogItem from "../blog/blog-item";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import BlogModal from "../modals/blog-modal";
 
 class Blog extends Component {
   constructor() {
@@ -13,38 +14,73 @@ class Blog extends Component {
       totalCount: 0,
       currentPage: 0,
       isLoading: true,
+      blogModalIsOpen: false,
     };
 
     this.getBlogItems = this.getBlogItems.bind(this);
     this.onScroll = this.onScroll.bind(this);
     window.addEventListener("scroll", this.onScroll, false);
+    this.handleNewBlogClick = this.handleNewBlogClick.bind(this);
+    this.handleModalClose = this.handleModalClose.bind(this);
+    this.handleSuccesfulNewBlogSubmission = this.handleSuccesfulNewBlogSubmission.bind(this);
+  }
+
+  handleSuccesfulNewBlogSubmission(blog) {
+    this.setState({
+      blogModalIsOpen: false,
+      blogItems: [blog].concat(this.state.blogItems),
+    });
+  }
+
+  handleNewBlogClick() {
+    this.setState({
+      blogModalIsOpen: true,
+    });
+  }
+
+  handleModalClose() {
+    this.setState({
+      blogModalIsOpen: false,
+    });
   }
 
   onScroll() {
-    if (this.state.isLoading || this.state.blogItems.length === this.state.totalCount) {
+    if (
+      this.state.isLoading ||
+      this.state.blogItems.length === this.state.totalCount
+    ) {
       return;
     }
-    if ((window.innerHeight + document.documentElement.scrollTop) ===  document.documentElement.offsetHeight) {
+    if (
+      window.innerHeight + document.documentElement.scrollTop ===
+      document.documentElement.offsetHeight
+    ) {
       this.getBlogItems();
     }
-  };
+  }
 
   getBlogItems() {
     this.setState({
-      currentPage: this.state.currentPage + 1
-    })
-    axios.get(`https://alily223.devcamp.space/portfolio/portfolio_blogs?page=${this.state.currentPage}`, {
-      withCredentials: true,
-    }).then(response => {
+      currentPage: this.state.currentPage + 1,
+    });
+    axios
+      .get(
+        `https://alily223.devcamp.space/portfolio/portfolio_blogs?page=${this.state.currentPage}`,
+        {
+          withCredentials: true,
+        }
+      )
+      .then((response) => {
         console.log("getting", response.data);
         this.setState({
-            blogItems: this.state.blogItems.concat(response.data.portfolio_blogs),
-            totalCount: response.data.meta.total_records,
-            isLoading: false
-        })
-    }).catch (error => {
+          blogItems: this.state.blogItems.concat(response.data.portfolio_blogs),
+          totalCount: response.data.meta.total_records,
+          isLoading: false,
+        });
+      })
+      .catch((error) => {
         console.log("getBlogItems error", error);
-    });
+      });
   }
 
   componentWillMount() {
@@ -52,26 +88,34 @@ class Blog extends Component {
   }
 
   componentWillUnmount() {
-    window.removeEventListener("scroll",this.onScroll, false);
+    window.removeEventListener("scroll", this.onScroll, false);
   }
 
   render() {
-    const blogRecords = this.state.blogItems.map(blogItem => {
-        return <BlogItem key={blogItem.id} blogItem={blogItem}/>
-    })
+    const blogRecords = this.state.blogItems.map((blogItem) => {
+      return <BlogItem key={blogItem.id} blogItem={blogItem} />;
+    });
     return (
       <div className="blog-container">
-      
-        <div className="content-container">
-          {blogRecords}
+        <BlogModal
+          handleSuccesfulNewBlogSubmission={
+            this.handleSuccesfulNewBlogSubmission
+          }
+          handleModalClose={this.handleModalClose}
+          modalIsOpen={this.state.blogModalIsOpen}
+        />
+
+        <div className="new-blog-link">
+          <a onClick={this.handleNewBlogClick}><FontAwesomeIcon icon="plus-circle"></FontAwesomeIcon></a>
         </div>
+
+        <div className="content-container">{blogRecords}</div>
 
         {this.state.isLoading ? (
           <div className="content-loader">
             <FontAwesomeIcon icon="spinner" spin></FontAwesomeIcon>
           </div>
         ) : null}
-        
       </div>
     );
   }

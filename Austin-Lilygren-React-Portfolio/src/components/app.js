@@ -13,9 +13,9 @@ import PortfolioManager from './pages/portfolio-manager';
 import PortfolioDetail from './portfolio/Portfolio-detail';
 import Auth from './pages/auth';
 import NoMatch from './pages/no-match';
-import {faTrash, faSignOutAlt, faEdit , faSpinner} from '@fortawesome/free-solid-svg-icons';
+import {faTrash, faSignOutAlt, faEdit , faSpinner, faPlusCircle} from '@fortawesome/free-solid-svg-icons';
 
-library.add(faTrash, faSignOutAlt, faEdit, faSpinner);
+library.add(faTrash, faSignOutAlt, faEdit, faSpinner, faPlusCircle);
 
 export default class App extends Component {
   constructor(props) {
