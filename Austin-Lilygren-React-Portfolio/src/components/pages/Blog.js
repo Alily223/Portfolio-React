@@ -22,7 +22,8 @@ class Blog extends Component {
     window.addEventListener("scroll", this.onScroll, false);
     this.handleNewBlogClick = this.handleNewBlogClick.bind(this);
     this.handleModalClose = this.handleModalClose.bind(this);
-    this.handleSuccesfulNewBlogSubmission = this.handleSuccesfulNewBlogSubmission.bind(this);
+    this.handleSuccesfulNewBlogSubmission =
+      this.handleSuccesfulNewBlogSubmission.bind(this);
   }
 
   handleSuccesfulNewBlogSubmission(blog) {
@@ -105,9 +106,13 @@ class Blog extends Component {
           modalIsOpen={this.state.blogModalIsOpen}
         />
 
-        <div className="new-blog-link">
-          <a onClick={this.handleNewBlogClick}><FontAwesomeIcon icon="plus-circle"></FontAwesomeIcon></a>
-        </div>
+        {this.props.loggedInStatus === "LOGGED_IN" ? (
+          <div className="new-blog-link">
+            <a onClick={this.handleNewBlogClick}>
+              <FontAwesomeIcon icon="plus-circle"></FontAwesomeIcon>
+            </a>
+          </div>
+        ) : null}
 
         <div className="content-container">{blogRecords}</div>
 
