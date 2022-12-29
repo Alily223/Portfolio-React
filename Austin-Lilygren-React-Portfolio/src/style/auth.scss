@@ -12,5 +12,21 @@
         justify-content:center;
         align-items: center;
         background-color: $offwhite;
+
+        .auth-form-wrapper{
+            @include input-element();
+            @include base-grid();
+    
+            grid-gap: 21px;
+            padding: 42px;
+
+            button {
+                @include base-btn()
+            }
+
+            .form-group{
+                display:flex;
+            }
+        }
     }
 }
